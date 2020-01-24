@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const {
   prefix,
   token,
-  helperRole,
+  giveawayRole,
   roles,
   okayEmoji,
   giveawayChannel
@@ -19,7 +19,7 @@ const addGiveawayRole = message => {
 
   if (member.id !== message.author.id) {
     member
-      .addRole(helperRole)
+      .addRole(giveawayRole)
       .then(console.log(`Giveaway role added to ${member.displayName}`))
       .then(message.react(message.guild.emojis.get(okayEmoji)))
       .catch(console.error);
@@ -32,7 +32,7 @@ const roleCheck = message =>
 const removeRole = (message, membersWithRole) => {
   if (membersWithRole.size !== 0) {
     membersWithRole.map(member => {
-      member.removeRole(helperRole);
+      member.removeRole(giveawayRole);
     });
 
     message.channel.send("Giveaway role removed!");
@@ -42,7 +42,7 @@ const removeRole = (message, membersWithRole) => {
 };
 
 client.on("message", message => {
-  const membersWithRole = message.guild.roles.get(helperRole).members;
+  const membersWithRole = message.guild.roles.get(giveawayRole).members;
 
   if (message.content.startsWith(prefix) && roleCheck(message)) {
     const variable = message.content.split(prefix)[1];
