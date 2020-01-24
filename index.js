@@ -30,7 +30,8 @@ const roleCheck = message =>
   message.member.roles.some(r => roles.includes(r.name));
 
 const removeRole = (message, membersWithRole) => {
-  if (membersWithRole.size !== 0) {
+  const memberSize = membersWithRole.size;
+  if (memberSize !== 0) {
     membersWithRole.map(member => {
       member.removeRole(giveawayRole);
     });
@@ -41,9 +42,12 @@ const removeRole = (message, membersWithRole) => {
   }
 };
 
-client.on("message", message => {
+const fetchUsers = message => {
   const membersWithRole = message.guild.roles.get(giveawayRole).members;
+  return membersWithRole;
+};
 
+client.on("message", message => {
   if (message.content.startsWith(prefix) && roleCheck(message)) {
     const variable = message.content.split(prefix)[1];
 
@@ -54,11 +58,11 @@ client.on("message", message => {
     if (message.channel.id === giveawayChannel) {
       switch (variable) {
         case "remove":
-          removeRole(message, membersWithRole);
+          removeRole(message, fetchUsers(message));
           break;
         case "role":
           message.channel.send(
-            `Got ${membersWithRole.size} members with giveaway role.`
+            `Got ${fetchUsers(message).size} members with giveaway role.`
           );
           break;
         default:
@@ -67,7 +71,10 @@ client.on("message", message => {
     }
   }
 
-  if (message.mentions.members && message.channel.id === giveawayChannel) {
+  if (
+    message.mentions.members.first() &&
+    message.channel.id === giveawayChannel
+  ) {
     addGiveawayRole(message);
   }
 });
