@@ -47,6 +47,21 @@ const fetchUsers = message => {
   return membersWithRole;
 };
 
+const dittoGiveawayCommands = (message, variable) => {
+  switch (variable) {
+    case "remove":
+      removeRole(message, fetchUsers(message));
+      break;
+    case "role":
+      message.channel.send(
+        `Got ${fetchUsers(message).size} members with giveaway role.`
+      );
+      break;
+    default:
+      break;
+  }
+};
+
 client.on("message", message => {
   if (message.content.startsWith(prefix) && roleCheck(message)) {
     const variable = message.content.split(prefix)[1];
@@ -55,25 +70,18 @@ client.on("message", message => {
       message.channel.send("Dong.");
     }
 
-    if (message.channel.id === giveawayChannel) {
-      switch (variable) {
-        case "remove":
-          removeRole(message, fetchUsers(message));
-          break;
-        case "role":
-          message.channel.send(
-            `Got ${fetchUsers(message).size} members with giveaway role.`
-          );
-          break;
-        default:
-          break;
-      }
+    switch (message.channel.id) {
+      case giveawayChannel:
+        dittoGiveawayCommands(message, variable);
+      default:
+        return;
     }
   }
 
   if (
-    message.mentions.members.first() &&
-    message.channel.id === giveawayChannel
+    message.channel.id === giveawayChannel &&
+    roleCheck(message) &&
+    message.mentions.members.first()
   ) {
     addGiveawayRole(message);
   }
