@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "discord.js": "^11.5.1"
+    "axios": "^0.19.2",
+    "discord.js": "^11.5.1",
+    "form-data": "^3.0.0"
   }
 }
