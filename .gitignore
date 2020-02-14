@@ -1,2 +1,7 @@
 /node_modules
 config.json
+response.json
+serviceAccount.json
+test.ek8
+firebase-config.js
+test.js
